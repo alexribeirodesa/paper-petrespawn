@@ -1,4 +1,4 @@
-name: Build Kotlin Plugin
+name: Build Paper Plugin
 
 on:
   push:
@@ -14,21 +14,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 25 # Ou a versão que você usa no Paper
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: 'oracle'
           cache: gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
+      - name: Build ShadowJar
         run: ./gradlew shadowJar
 
-      - name: Upload Artifact
+      - name: Upload Plugin Jar
         uses: actions/upload-artifact@v4
         with:
-          name: plugin-final
+          name: ${{ github.event.repository.name }}-build
           path: build/libs/*.jar
