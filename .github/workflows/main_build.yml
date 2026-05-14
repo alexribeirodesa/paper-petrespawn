@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -18,7 +20,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'oracle'
+          distribution: 'temurin'
           cache: gradle
 
       - name: Grant execute permission for gradlew
@@ -27,18 +29,25 @@ jobs:
       - name: Build ShadowJar
         run: ./gradlew shadowJar
 
-      - name: Upload Plugin Jar
+      - name: Get short SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Upload Artifact (para PRs e debug)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-build
+          name: ${{ github.event.repository.name }}-${{ steps.sha.outputs.short }}
           path: build/libs/*.jar
 
       - name: Create GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: build-${{ steps.sha.outputs.short }}
+          name: "Build ${{ steps.sha.outputs.short }}"
           files: build/libs/*.jar
           generate_release_notes: true
           draft: false
-          prerelease: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
