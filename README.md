@@ -1,7 +1,8 @@
 # PetRespawn 🐾
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-Paper%2026.1.2-orange)
-![Version](https://img.shields.io/badge/version-1.0--SNAPSHOT-orange)
+![Build Version](https://img.shields.io/badge/version-1.0--SNAPSHOT-orange)
+![Build Status](https://img.shields.io/github/actions/workflow/status/alexribeirodesa/paper-petrespawn/.github/workflows/main_build.yml?branch=main&label=build)
 ![Kotlin](https://img.shields.io/badge/language-Kotlin-purple)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
