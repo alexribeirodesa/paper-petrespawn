@@ -39,9 +39,10 @@ This plugin supports **MiniMessage** (Adventure) tags for rich text formatting a
 ```yaml
 # Language Settings
 messages:
-  # Soul Egg drop names
-  soul-egg: "Soul Egg"
-  charged-soul-egg: "Charged Soul Egg"
+  # Soul Egg
+  soul-egg: "<white>Soul Egg"
+  charged-soul-egg: "<aqua>Charged Soul Egg"
+  soul-egg-lore: "<grey>Pet: {petname}"
 ```
 
 ## 🏗️ Development
