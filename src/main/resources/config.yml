@@ -1,0 +1,31 @@
+localization:
+  # Item name
+  soul-egg: "<white>Soul Egg"
+  charged-soul-egg: "<aqua>Charged Soul Egg"
+  soul-egg-lore: "<grey>Pet: {petname}"
+
+  # Command usage and help (CLI)
+  command-reload-output: "Reload configuration data"
+  command-reload-description: "Reload configuration data"
+
+
+
+  # Respawn message
+  pet-respawn: "{pet} está tendo uma segunda chance!"
+
+  # Title and Subtitle shown when entering a claim
+  claim-title: "<green>{name}"
+  claim-subtitle: "<yellow>Entering claim of: <gold>{owner}</gold>"
+
+  # Feedback for the /claimname command
+  claim-set: "<green>Claim name updated to: <white>{name}</white>"
+  claim-cleared: "<red>Claim name has been reset.</red>"
+
+  # Error messages
+  claim-empty: "<red>You are not inside a claim!"
+  claim-permission: "<red>You don't have permission to name this claim!"
+
+  # Command usage and help (CLI)
+  command-claimname-argument: "name"
+  command-claimname-use: "<yellow>Usage: /claimname <name>"
+  command-claimname-description: "Sets a custom name for the current claim"

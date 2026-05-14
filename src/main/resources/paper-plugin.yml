@@ -1,0 +1,9 @@
+name: PetRespawn
+description: $description
+version: '${version}'
+
+main: org.elalezito.petRespawn.PetRespawn
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [ El Alezito ]
