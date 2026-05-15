@@ -5,6 +5,10 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.plugin.java.JavaPlugin
 import org.elalezito.swissKnife.objects.Toolkit
 
+data class ConfigData(
+	val useCustomTextures: Boolean = false
+)
+
 data class LocalizationData(
 	var soulEgg: String,
 	var chargedSoulEgg: String,
@@ -18,6 +22,10 @@ object Config {
 	private val legacySerializer = LegacyComponentSerializer.legacySection()
 
 	private lateinit var plugin: JavaPlugin
+
+	private lateinit var _config: ConfigData
+	val config: ConfigData
+		get() = _config
 
 	private lateinit var _localization: LocalizationData
 	val localization: LocalizationData
@@ -35,6 +43,11 @@ object Config {
 
 		Toolkit.log(getString("localization.charged-soul-egg", "Charged Soul Egg"))
 
+		// configuração
+		_config = ConfigData(
+			getBool("config.use-custom-textures", false),
+		)
+
 		// localização
 		_localization = LocalizationData(
 			getString("localization.soul-egg", "Soul Egg"),
@@ -51,5 +64,10 @@ object Config {
 		val config = plugin.config
 		val component = mm.deserialize(config.getString(path) ?: default)
 		return legacySerializer.serialize(component)
+	}
+
+	private fun getBool(path: String, default: Boolean = false): Boolean {
+		val config = plugin.config
+		return config.getBoolean(path, default)
 	}
 }

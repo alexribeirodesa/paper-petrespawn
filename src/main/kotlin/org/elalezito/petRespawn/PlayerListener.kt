@@ -3,6 +3,7 @@ package org.elalezito.petRespawn
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.entity.Tameable
 import org.bukkit.event.EventHandler
@@ -54,6 +55,10 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 			meta.persistentDataContainer.set(PetKeys.IS_CHARGED_SOUL_EGG, PersistentDataType.BOOLEAN, false)
 			meta.persistentDataContainer.set(PetKeys.PET_UUID, PersistentDataType.STRING, pet.uniqueId.toString())
 			meta.persistentDataContainer.set(PetKeys.OWNER_UUID, PersistentDataType.STRING, pet.ownerUniqueId.toString())
+
+			if(Config.config.useCustomTextures)
+				meta.itemModel = NamespacedKey("petrespawn", "soulegg_model")
+
 			egg.itemMeta = meta
 
 			event.drops.add(egg)
@@ -84,7 +89,9 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 					location.world.dropItem(location, item)
 
 					location.world.spawnParticle(Particle.SMOKE, location, 10, 0.2, 0.2, 0.2, 0.05)
-					location.world.playSound(location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.5f, 0.8f)
+					location.world.spawnParticle(Particle.SOUL, location, 10, 0.2, 0.2, 0.2, 0.05)
+					location.world.playSound(location, Sound.BLOCK_SOUL_SAND_BREAK, 0.75f, 0.8f)
+					location.world.playSound(location, Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 0.5f, 0.8f)
 
 					return
 				}
@@ -116,8 +123,8 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 
 		val soulEgg = matrix.find {
 			it != null &&
-							it.type == Material.EGG &&
-							it.itemMeta.persistentDataContainer.has(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN)
+				it.type == Material.EGG &&
+				it.itemMeta.persistentDataContainer.has(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN)
 		}
 
 		// cancela o craft se não tiver o ovo da alma
