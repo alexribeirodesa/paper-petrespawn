@@ -38,11 +38,14 @@ class PetManager(private val plugin: JavaPlugin) {
 		val result = ItemStack(Material.EGG)
 		val meta = result.itemMeta
 
-		meta.displayName(Component.text(Config.localization.chargedSoulEgg))
+
+
+
+		meta.displayName(Component.text(Config.items.ChargedSoulEgg.displayName))
 		meta.addEnchant(Enchantment.UNBREAKING, 1, true)
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
 
-		if(Config.config.useCustomTextures)
+		if(Config.items.useCustomTextures)
 			meta.itemModel = NamespacedKey("petrespawn", "chargedsoulegg_model")
 
 		result.itemMeta = meta

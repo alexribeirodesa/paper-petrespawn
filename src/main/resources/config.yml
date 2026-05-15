@@ -1,7 +1,24 @@
-config:
+items:
   # Custom Texturepack
   # url para download do datapack base
   use-custom-textures: false
+
+  soul-egg:
+    display-name: "<white>Soul Egg"
+    lore:
+      - "<aqua>{petname} pet soul"
+  charged-soul-egg:
+    display-name: "<aqua><bold>Charged Soul Egg"
+    lore:
+      - "<aqua>{petname} pet soul"
+
+achievements:
+
+
+config:
+  # Custom Texturepack
+  # url para download do datapack base
+  use-custom-textures: true
 
 localization:
   # Soul Egg

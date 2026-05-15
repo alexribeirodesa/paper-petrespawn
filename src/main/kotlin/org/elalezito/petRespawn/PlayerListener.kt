@@ -24,6 +24,8 @@ import org.bukkit.persistence.PersistentDataType
 import org.elalezito.petRespawn.objects.Config
 import org.elalezito.petRespawn.objects.PetKeys
 
+// TODO: limpar isso para o PetManager!
+
 class PlayerListener(private val plugin: JavaPlugin, private val petManager: PetManager) : Listener {
 	@EventHandler
 	fun onPetDeath(event: EntityDeathEvent) {
@@ -36,11 +38,16 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 			val meta = egg.itemMeta
 
 			meta.displayName(
-				Component.text(Config.localization.soulEgg)
+				Component.text(Config.items.soulEgg.displayName)
 			)
 
 			val lore = mutableListOf<Component>()
-			lore.add(Component.text(Config.localization.soulEggLore.replace("{petname}", pet.name)))
+			Config.items.soulEgg.lore.forEach { soulEggLoreComponent ->
+				val processedComponent = soulEggLoreComponent.replaceText { builder ->
+					builder.matchLiteral("{petname}").replacement(pet.name)
+				}
+				lore.add(processedComponent)
+			}
 
 			meta.lore(lore)
 
@@ -53,10 +60,11 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 			// gera o ovo da alma
 			meta.persistentDataContainer.set(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN, true)
 			meta.persistentDataContainer.set(PetKeys.IS_CHARGED_SOUL_EGG, PersistentDataType.BOOLEAN, false)
+			meta.persistentDataContainer.set(PetKeys.PET_NAME, PersistentDataType.STRING, pet.name)
 			meta.persistentDataContainer.set(PetKeys.PET_UUID, PersistentDataType.STRING, pet.uniqueId.toString())
 			meta.persistentDataContainer.set(PetKeys.OWNER_UUID, PersistentDataType.STRING, pet.ownerUniqueId.toString())
 
-			if(Config.config.useCustomTextures)
+			if (Config.items.useCustomTextures)
 				meta.itemModel = NamespacedKey("petrespawn", "soulegg_model")
 
 			egg.itemMeta = meta
@@ -123,13 +131,13 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 
 		val soulEgg = matrix.find {
 			it != null &&
-				it.type == Material.EGG &&
-				it.itemMeta.persistentDataContainer.has(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN)
+							it.type == Material.EGG &&
+							it.itemMeta.persistentDataContainer.has(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN)
 		}
 
 		// cancela o craft se não tiver o ovo da alma
 		if (soulEgg == null) {
-			if (event.recipe?.result?.itemMeta?.displayName() == Component.text(Config.localization.chargedSoulEgg)
+			if (event.recipe?.result?.itemMeta?.displayName() == Component.text(Config.items.ChargedSoulEgg.displayName)
 			) {
 				inventory.result = null
 			}
@@ -147,6 +155,7 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 		val resultPDC = resultMeta.persistentDataContainer
 
 		val ownerUuid = soulPDC.get(PetKeys.OWNER_UUID, PersistentDataType.STRING) ?: return
+		val petName = soulPDC.get(PetKeys.PET_NAME, PersistentDataType.STRING) ?: return
 		val petUuid = soulPDC.get(PetKeys.PET_UUID, PersistentDataType.STRING) ?: return
 
 		resultPDC.set(PetKeys.IS_SOUL_EGG, PersistentDataType.BOOLEAN, true)
@@ -155,7 +164,16 @@ class PlayerListener(private val plugin: JavaPlugin, private val petManager: Pet
 		resultPDC.set(PetKeys.PET_UUID, PersistentDataType.STRING, petUuid)
 
 		result.itemMeta = resultMeta
-		result.lore(soulMeta.lore())
+
+		val lore = mutableListOf<Component>()
+		Config.items.ChargedSoulEgg.lore.forEach { soulEggLoreComponent ->
+			val processedComponent = soulEggLoreComponent.replaceText { builder ->
+				builder.matchLiteral("{petname}").replacement(petName)
+			}
+			lore.add(processedComponent)
+		}
+		result.lore(lore)
+
 		inventory.result = result
 	}
 }
